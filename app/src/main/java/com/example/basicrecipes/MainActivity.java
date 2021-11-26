@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -37,22 +38,6 @@ public class MainActivity extends AppCompatActivity {
         String url = "https://api.spoonacular.com/recipes/findByIngredients";
 
         this.apiKey = "7f9718e13529466691df6206e109c755";
-//        String testIngredients = "chicken,bacon,lettuce";
-//        url = url + String.format("?apiKey=%s&ingredients=%s", apiKey, testIngredients);
-//
-//        JsonObjectRequest request = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                t.setText(response.toString());
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                t.setText(error.getMessage());
-//            }
-//        });
-//
-//        queue.add(request);
     }
 
     public void searchByIngredients(View v){
@@ -60,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         TextView t = (TextView) findViewById(R.id.ingredientInput);
         String ingredients = t.getText().toString();
         CharSequence joined = TextUtils.replace(ingredients,new String[]{"\n"},new CharSequence[]{","});
-        endPoint = endPoint + "&ingredients=" + joined;
+        endPoint = endPoint + "&ranking=2&ingredients=" + joined;
 
         TextView results = (TextView) findViewById(R.id.recipeResults);
 
@@ -69,16 +54,16 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONArray response) {
                 StringBuilder shittyResults = new StringBuilder(); //todo: distinct objects instead of big string
                 //results.setText(response.toString());
-                HashMap<String, ArrayList<String>> recipes = null;
+                ArrayList<ArrayList<String>> recipes = null;
                 try {
                     recipes = parseRecipeResults(response);
                 } catch (JSONException e) {
                     results.setText(e.getMessage());
                 }
                 if (recipes != null && !recipes.isEmpty()){
-                    for (String key : recipes.keySet()){
-                        shittyResults.append(key).append(":\n");
-                        for (String ingredient : recipes.get(key)){
+                    for (ArrayList<String> recipe : recipes){
+                        shittyResults.append(recipe.get(0)).append(":\n");
+                        for (String ingredient : recipe.subList(1,recipe.size()-1)){
                             shittyResults.append("\t").append(ingredient).append("\n");
                         }
                     }
@@ -95,13 +80,14 @@ public class MainActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-    private HashMap<String, ArrayList<String>> parseRecipeResults(JSONArray response) throws JSONException {
-        HashMap<String, ArrayList<String>> recipes = new HashMap<>();
+    private ArrayList<ArrayList<String>> parseRecipeResults(JSONArray response) throws JSONException {
+        ArrayList<ArrayList<String>> recipes = new ArrayList<>();
         // parse response and print out nicely
         for (int i = 0; i < response.length(); i++){
-            ArrayList<String> recipeInfo = new ArrayList<>();
+            ArrayList<String> recipeArray = new ArrayList<>();
             JSONObject recipe = response.getJSONObject(i);
             String title = recipe.getString("title");
+            recipeArray.add(title);
             JSONArray usedIngredients = recipe.getJSONArray("usedIngredients");
             JSONArray missingIngredients = recipe.getJSONArray("missedIngredients");
 
@@ -110,16 +96,16 @@ public class MainActivity extends AppCompatActivity {
                 String name = ingredient.getString("name");
                 String amount = ingredient.getString("amount");
                 String unit = ingredient.getString("unit");
-                recipeInfo.add(amount + " " + unit + " " + name);
+                recipeArray.add(amount + " " + unit + " " + name);
             }
             for (int j = 0; j < missingIngredients.length(); j++){
                 JSONObject ingredient = missingIngredients.getJSONObject(j);
                 String name = ingredient.getString("name");
                 String amount = ingredient.getString("amount"); //todo: can just getString?
                 String unit = ingredient.getString("unit");
-                recipeInfo.add(amount + " " + unit + " " + name);
+                recipeArray.add(amount + " " + unit + " " + name);
             }
-            recipes.put(title,recipeInfo);
+            recipes.add(recipeArray);
             Log.d("title", title);
             Log.d("used_ingredients", usedIngredients.toString());
             Log.d("missing_ingredients", missingIngredients.toString());
