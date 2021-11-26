@@ -1,8 +1,10 @@
 package com.example.basicrecipes;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Layout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +19,9 @@ import java.util.HashMap;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder>{
 
-    private ArrayList<ArrayList<String>> recipes;
+    private ArrayList<Recipe> recipes;
 
-    public RecipesAdapter(ArrayList<ArrayList<String>> recipes){
+    public RecipesAdapter(ArrayList<Recipe> recipes){
         this.recipes = recipes;
     }
 
@@ -37,10 +39,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ArrayList<String> recipe = recipes.get(position);
-        holder.name.setText(recipe.get(0));
+        Recipe recipe = recipes.get(position);
+        holder.name.setText(recipe.getName());
+        // holder.setRecipe() -> pass in recipe so it can access the data
         // todo: functional buttons
-        holder.ingredients.setText(TextUtils.join(", ",recipe.subList(1,recipe.size()-1)));
+        holder.ingredients.setText(TextUtils.join(", ",recipe.getIngredients()));
     }
 
     @Override
@@ -58,6 +61,16 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
             name = (TextView) itemView.findViewById(R.id.recipe_name);
             ingredients = (TextView) itemView.findViewById(R.id.ingredients_needed);
             expandButton = (Button) itemView.findViewById(R.id.expand_button);
+            expandButton.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    // what to do here?
+                    // pass in listener to viewholder
+
+                    Log.d("test", "clicked button");
+                }
+            });
         }
     }
 }
