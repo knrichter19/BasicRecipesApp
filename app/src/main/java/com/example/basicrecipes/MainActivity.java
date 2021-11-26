@@ -48,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
         String endPoint = "https://api.spoonacular.com/recipes/findByIngredients?apiKey=" + this.apiKey;
         TextView t = (TextView) findViewById(R.id.ingredientInput);
         String ingredients = t.getText().toString();
-        CharSequence joined = TextUtils.replace(ingredients,new String[]{"\n"},new CharSequence[]{","});
+        Log.d("ingredients", ingredients);
+        String joined = ingredients.replaceAll("\n", ",");
+        //CharSequence joined = TextUtils.replace(ingredients,new String[]{"\n"},new CharSequence[]{","});
+        Log.d("ingredients", joined);
         endPoint = endPoint + "&ranking=1&ingredients=" + joined;
         // todo: option to toggle ranking
 
