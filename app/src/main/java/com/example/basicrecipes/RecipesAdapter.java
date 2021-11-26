@@ -2,6 +2,7 @@ package com.example.basicrecipes;
 
 import android.content.Context;
 import android.text.Layout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,9 @@ import java.util.HashMap;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder>{
 
-    private HashMap<String, ArrayList<String>> recipes;
+    private ArrayList<ArrayList<String>> recipes;
 
-    public RecipesAdapter(HashMap<String, ArrayList<String>> recipes){
+    public RecipesAdapter(ArrayList<ArrayList<String>> recipes){
         this.recipes = recipes;
     }
 
@@ -36,12 +37,15 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        ArrayList<String> recipe = recipes.get(position);
+        holder.name.setText(recipe.get(0));
+        // todo: functional buttons
+        holder.ingredients.setText(TextUtils.join(", ",recipe.subList(1,recipe.size()-1)));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return recipes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

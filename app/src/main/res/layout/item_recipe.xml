@@ -4,29 +4,33 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
     >
 
     <TextView
         android:id="@+id/recipe_name"
-        android:layout_width="0dp"
+        android:layout_width="10dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"/>
 
     <TextView
         android:id="@+id/ingredients_needed"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_weight="1.5"
-        android:textSize="10sp"/>
+        android:textSize="10sp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"/>
 
     <Button
         android:id="@+id/expand_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:textSize="10sp"
-        />
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="Expand"
+        android:textSize="10sp" />
 </LinearLayout>

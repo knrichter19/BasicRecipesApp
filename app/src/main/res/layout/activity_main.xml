@@ -13,6 +13,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.609"
@@ -33,26 +34,25 @@
         android:id="@+id/searchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="12dp"
         android:onClick="searchByIngredients"
         android:text="Search Recipes"
-        app:layout_constraintBottom_toTopOf="@+id/recipeResults"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientInput" />
 
     <EditText
         android:id="@+id/ingredientInput"
-        android:layout_width="391dp"
-        android:layout_height="139dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="398dp"
+        android:layout_height="138dp"
+        android:layout_marginTop="68dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/searchButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.794" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/apiKeyLabel"
@@ -65,11 +65,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRecipes"
-        android:layout_width="395dp"
-        android:layout_height="437dp"
-        android:visibility="invisible"
+        android:layout_width="392dp"
+        android:layout_height="427dp"
+        android:layout_marginBottom="1dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

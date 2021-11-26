@@ -1,6 +1,8 @@
 package com.example.basicrecipes;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,13 +29,16 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     private String apiKey;
     private RequestQueue queue;
+    private RecyclerView recipeView;
+    private ArrayList<ArrayList<String>> recipeResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        TextView t = findViewById(R.id.recipeResults);
-
+        recipeView = findViewById(R.id.rvRecipes);
+        // do this later
         queue = Volley.newRequestQueue(this);
         String url = "https://api.spoonacular.com/recipes/findByIngredients";
 
@@ -68,7 +73,11 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                // todo: error check here + move elsewhere
                 results.setText(shittyResults.toString());
+                RecipesAdapter adapter = new RecipesAdapter(recipes);
+                recipeView.setAdapter(adapter);
+                recipeView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
             }
         }, new Response.ErrorListener() {
             @Override
