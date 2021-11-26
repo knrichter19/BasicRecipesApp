@@ -1,15 +1,20 @@
 package com.example.basicrecipes;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class VolleySingleton {
     private static VolleySingleton instance = null;
@@ -60,5 +65,71 @@ public class VolleySingleton {
                 + "&includeNutrition=" + String.valueOf(includeNutrition);
         JsonObjectRequest request = new JsonObjectRequest(url, listener, errorListener);
         requestQueue.add(request);
+    }
+
+    public void requestRecipeInstructions(String recipeId, Response.Listener<JSONArray> listener,
+                                          Response.ErrorListener errorListener){
+        String url = "https://api.spoonacular.com/recipes/"+recipeId+"/analyzedInstructions?apiKey=" + apiKey;
+        JsonArrayRequest request = new JsonArrayRequest(url,listener,errorListener);
+        requestQueue.add(request);
+    }
+
+    public String getRecipeUrl(String recipeId){
+        final String[] returnUrl = new String[1]; //find better way to do this
+        returnUrl[0] = "";
+        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    returnUrl[0] = response.getString("sourceUrl");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        };
+        requestRecipeInfo(recipeId,false,listener,errorListener);
+        return returnUrl[0];
+    }
+
+    public ArrayList<String> getInstructionList(String recipeId){
+        ArrayList<String> instructions = new ArrayList<>();
+        Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    JSONArray steps = response.getJSONObject(0).getJSONArray("steps");
+                    for (int i = 0; i < steps.length(); i++) {
+                        try {
+                            JSONObject step = steps.getJSONObject(i);
+                            Log.d("response step", step.toString());
+                            String number = step.getString("number");
+                            String stepString = step.getString("step");
+                            instructions.add("Step " + number + ":\n\t" + stepString);
+                            Log.d("after adding step:", instructions.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        };
+        requestRecipeInstructions(recipeId,listener,errorListener);
+        // todo: how to get it to save instructions?
+        Log.d("all steps", instructions.toString());
+        return instructions;
     }
 }

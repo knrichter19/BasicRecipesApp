@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+
+import java.util.ArrayList;
 
 public class RecipeViewActivity extends AppCompatActivity {
 
@@ -17,6 +20,7 @@ public class RecipeViewActivity extends AppCompatActivity {
     private TextView recipeDisplay;
     private String recipeId;
     private VolleySingleton requests;
+    private String originalUrl;
     private String apiKey;
 
     @Override
@@ -33,11 +37,14 @@ public class RecipeViewActivity extends AppCompatActivity {
         recipeHeader.setText(i.getStringExtra("name"));
 
         requests = VolleySingleton.getInstance();
-
+        ArrayList<String> instructions = requests.getInstructionList(recipeId);
+        // how to wait for results of volley query?
+        originalUrl = requests.getRecipeUrl(recipeId);
         // unpack intent
         // display things well
     }
 
-    private void getInstructions(){
+    public void goToOriginal(View v){
+        // figure out how to go to original site
     }
 }

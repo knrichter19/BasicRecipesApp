@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -49,28 +50,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchByIngredients(View v){
-        String endPoint = "https://api.spoonacular.com/recipes/findByIngredients?apiKey=" + this.apiKey;
         TextView t = (TextView) findViewById(R.id.ingredientInput);
         String ingredients = t.getText().toString();
-        Log.d("ingredients", ingredients);
         String joined = ingredients.replaceAll("\n", ",");
-        //CharSequence joined = TextUtils.replace(ingredients,new String[]{"\n"},new CharSequence[]{","});
         Log.d("ingredients", joined);
-        endPoint = endPoint + "&ranking=1&ingredients=" + joined;
         // todo: option to toggle ranking
-
-        TextView results = (TextView) findViewById(R.id.recipeResults);
 
         // todo: move to new class
         Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                //results.setText(response.toString());
                 ArrayList<Recipe> recipes = null;
                 try {
                     recipes = parseRecipeResults(response);
                 } catch (JSONException e) {
-                    results.setText(e.getMessage());
+                    Toast.makeText(MainActivity.this,"Error interpreting results", Toast.LENGTH_LONG).show();
                 }
 
                 // todo: error check here + move elsewhere
@@ -83,37 +77,12 @@ public class MainActivity extends AppCompatActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                results.setText(error.getMessage());
+                Toast.makeText(MainActivity.this,"Error retrieving results", Toast.LENGTH_LONG).show();
             }
         };
 
         requests.setApiKey(this.apiKey);
         requests.requestRecipes(joined,1,listener,errorListener);
-
-//        JsonArrayRequest request = new JsonArrayRequest(endPoint, new Response.Listener<JSONArray>() {
-//            @Override
-//            public void onResponse(JSONArray response) {
-//                //results.setText(response.toString());
-//                ArrayList<Recipe> recipes = null;
-//                try {
-//                    recipes = parseRecipeResults(response);
-//                } catch (JSONException e) {
-//                    results.setText(e.getMessage());
-//                }
-//
-//                // todo: error check here + move elsewhere
-//                RecipesAdapter adapter = new RecipesAdapter(recipes);
-//                recipeView.setAdapter(adapter);
-//                recipeView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                results.setText(error.getMessage());
-//            }
-//        });
-//
-//        queue.add(request);
     }
 
     private ArrayList<Recipe> parseRecipeResults(JSONArray response) throws JSONException {
