@@ -2,7 +2,6 @@ package com.example.basicrecipes;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder>{
+    // Adapter for RecyclerView
 
-    private ArrayList<Recipe> recipes;
+    private ArrayList<Recipe> recipes; // List of recipes from search results
+    private Context context; // MainActivity context
 
     public RecipesAdapter(ArrayList<Recipe> recipes){
         this.recipes = recipes;
@@ -28,22 +28,19 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        // context = activity this is running in?
+        this.context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        // instantiate inflater with reference to context
         View recipeView = inflater.inflate(R.layout.item_recipe,parent,false);
-        // create and inflate a view, giving it the context and the layout to use
         return new ViewHolder(recipeView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // fills viewholder variables for each recipe in list
         Recipe recipe = recipes.get(position);
-        holder.name.setText(recipe.getName());
-        // holder.setRecipe() -> pass in recipe so it can access the data
-        // todo: functional buttons
-        holder.ingredients.setText(TextUtils.join(", ",recipe.getIngredients()));
+        holder.setRecipe(recipe); // reference to recipe object
+//        holder.nameBox.setText(recipe.getName()); // fill textBox
+//        holder.ingredientsBox.setText(TextUtils.join(", ",recipe.getIngredients()));
     }
 
     @Override
@@ -51,26 +48,45 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         return recipes.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public TextView ingredients;
+        public TextView nameBox;
+        public TextView ingredientsBox;
         public Button expandButton;
+        public Recipe recipe;
 
         public ViewHolder(View itemView){
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.recipe_name);
-            ingredients = (TextView) itemView.findViewById(R.id.ingredients_needed);
-            expandButton = (Button) itemView.findViewById(R.id.expand_button);
-            expandButton.setOnClickListener(new View.OnClickListener(){
 
+            // grab items in each row's layout
+            nameBox = (TextView) itemView.findViewById(R.id.recipe_name);
+            ingredientsBox = (TextView) itemView.findViewById(R.id.ingredients_needed);
+            expandButton = (Button) itemView.findViewById(R.id.expand_button);
+
+            // set button listener (better way to do this?)
+            expandButton.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    // what to do here?
-                    // pass in listener to viewholder
-
-                    Log.d("test", "clicked button");
+                    // opens new activity with more detailed recipe instructions
+                    if (recipe != null) { // todo: better bug fixing
+                        // gets context from adapter
+                        Intent intent = new Intent(context, RecipeViewActivity.class);
+                        // sends over recipe name + id
+                        intent.putExtra("name", recipe.getName());
+                        intent.putExtra("id", recipe.getId());
+                        context.startActivity(intent);
+                    }
+                    Log.d("ButtonClick", "clicked expand button");
                 }
             });
+        }
+
+        public void setRecipe(Recipe recipe) {
+            // reference to recipe object
+            this.recipe = recipe;
+            // sets text for name + ingredients
+            nameBox.setText(recipe.getName());
+            ingredientsBox.setText(TextUtils.join(", ", recipe.getIngredients()));
         }
     }
 }

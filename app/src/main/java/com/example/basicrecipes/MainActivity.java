@@ -29,6 +29,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     private String apiKey;
     private RequestQueue queue;
+    private VolleySingleton requests;
     private RecyclerView recipeView;
 
     @Override
@@ -37,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        TextView t = findViewById(R.id.recipeResults);
         recipeView = findViewById(R.id.rvRecipes);
-        // do this later
+
+        // set up API connection
+        requests = VolleySingleton.getInstance(this);
+
         queue = Volley.newRequestQueue(this);
         String url = "https://api.spoonacular.com/recipes/findByIngredients";
 
@@ -57,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
         TextView results = (TextView) findViewById(R.id.recipeResults);
 
-        JsonArrayRequest request = new JsonArrayRequest(endPoint, new Response.Listener<JSONArray>() {
+        // todo: move to new class
+        Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                StringBuilder shittyResults = new StringBuilder(); //todo: distinct objects instead of big string
                 //results.setText(response.toString());
                 ArrayList<Recipe> recipes = null;
                 try {
@@ -68,28 +72,48 @@ public class MainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     results.setText(e.getMessage());
                 }
-                if (recipes != null && !recipes.isEmpty()){
-                    for (Recipe recipe : recipes){
-//                        shittyResults.append(recipe.get(0)).append(":\n");
-//                        for (String ingredient : recipe.subList(1,recipe.size()-1)){
-//                            shittyResults.append("\t").append(ingredient).append("\n");
-//                        }
-                    }
-                }
+
                 // todo: error check here + move elsewhere
-                results.setText(shittyResults.toString());
                 RecipesAdapter adapter = new RecipesAdapter(recipes);
                 recipeView.setAdapter(adapter);
                 recipeView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
             }
-        }, new Response.ErrorListener() {
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 results.setText(error.getMessage());
             }
-        });
+        };
 
-        queue.add(request);
+        requests.setApiKey(this.apiKey);
+        requests.requestRecipes(joined,1,listener,errorListener);
+
+//        JsonArrayRequest request = new JsonArrayRequest(endPoint, new Response.Listener<JSONArray>() {
+//            @Override
+//            public void onResponse(JSONArray response) {
+//                //results.setText(response.toString());
+//                ArrayList<Recipe> recipes = null;
+//                try {
+//                    recipes = parseRecipeResults(response);
+//                } catch (JSONException e) {
+//                    results.setText(e.getMessage());
+//                }
+//
+//                // todo: error check here + move elsewhere
+//                RecipesAdapter adapter = new RecipesAdapter(recipes);
+//                recipeView.setAdapter(adapter);
+//                recipeView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                results.setText(error.getMessage());
+//            }
+//        });
+//
+//        queue.add(request);
     }
 
     private ArrayList<Recipe> parseRecipeResults(JSONArray response) throws JSONException {
@@ -102,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             String title = recipe.getString("title");
             newRecipe.setName(title);
             newRecipe.setId(recipe.getString("id"));
+            // getrecipeinformation with id to grab sourceurl
             JSONArray usedIngredients = recipe.getJSONArray("usedIngredients");
             JSONArray missingIngredients = recipe.getJSONArray("missedIngredients");
 
@@ -125,11 +150,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("used_ingredients", usedIngredients.toString());
             Log.d("missing_ingredients", missingIngredients.toString());
         }
-        Log.d("full hashmap", recipes.toString());
+        Log.d("full list", recipes.toString());
         return recipes;
-    }
-
-    public void expandRecipe(View v){
-
     }
 }

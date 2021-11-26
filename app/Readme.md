@@ -6,6 +6,7 @@ Todo list:
 - Fix recyclerview initialization - don't remake everything for each search
 - Adjust request/processing for grabbing recipes
 - Working buttons to get recipe info in new activity
+- Get recipe instructions from url/api
 - Error checking + refactoring
 
 Possible todo list:
