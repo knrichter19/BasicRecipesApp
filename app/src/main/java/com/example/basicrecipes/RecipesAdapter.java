@@ -39,8 +39,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         // fills viewholder variables for each recipe in list
         Recipe recipe = recipes.get(position);
         holder.setRecipe(recipe); // reference to recipe object
-//        holder.nameBox.setText(recipe.getName()); // fill textBox
-//        holder.ingredientsBox.setText(TextUtils.join(", ",recipe.getIngredients()));
     }
 
     @Override
@@ -68,12 +66,13 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
                     // opens new activity with more detailed recipe instructions
-                    if (recipe != null) { // todo: better bug fixing
+                    if (recipe != null) { // todo: better bug catching
                         // gets context from adapter
                         Intent intent = new Intent(context, RecipeViewActivity.class);
                         // sends over recipe name + id
                         intent.putExtra("name", recipe.getName());
                         intent.putExtra("id", recipe.getId());
+                        intent.putExtra("ingredients", TextUtils.join("\n",recipe.getIngredients()));
                         context.startActivity(intent);
                     }
                     Log.d("ButtonClick", "clicked expand button");

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ public class RecipeViewActivity extends AppCompatActivity {
     private VolleySingleton requests;
     private String originalUrl;
     private String apiKey;
+    private String ingredientString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,11 @@ public class RecipeViewActivity extends AppCompatActivity {
         Intent i = getIntent();
         recipeId = i.getStringExtra("id");
         recipeHeader.setText(i.getStringExtra("name"));
+        ingredientString = i.getStringExtra("ingredients");
+        // todo: figure out how to get apiKey
 
         requests = VolleySingleton.getInstance();
+        originalUrl = null;
         getInstructionList();
         getRecipeUrl();
         // how to wait for results of volley query?
@@ -66,7 +71,8 @@ public class RecipeViewActivity extends AppCompatActivity {
                             Log.d("response step", step.toString());
                             String number = step.getString("number");
                             String stepString = step.getString("step");
-                            instructions.add("Step " + number + ":\n\t" + stepString);
+                            instructions.add("Step " + number + ":\n-" + stepString.replace(".",".\n-"));
+                            // todo: fix extra - at end of each step
                             Log.d("after adding step:", instructions.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -75,7 +81,9 @@ public class RecipeViewActivity extends AppCompatActivity {
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
-                recipeDisplay.setText(instructions.toString());
+
+                String displayString = getString(R.string.recipe_display_string, ingredientString, instructions.size() > 0? TextUtils.join("\n",instructions) : "Instructions could not be extracted from original site");
+                recipeDisplay.setText(displayString);
                 // display here
             }
         };
@@ -90,6 +98,7 @@ public class RecipeViewActivity extends AppCompatActivity {
     }
 
     private void getRecipeUrl(){
+        // sends API request through volley to get the original recipe url - maybe refactor to get additional information later?
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
