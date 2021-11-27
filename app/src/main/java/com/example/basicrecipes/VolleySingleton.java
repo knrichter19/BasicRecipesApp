@@ -2,6 +2,7 @@ package com.example.basicrecipes;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -95,41 +96,5 @@ public class VolleySingleton {
         };
         requestRecipeInfo(recipeId,false,listener,errorListener);
         return returnUrl[0];
-    }
-
-    public ArrayList<String> getInstructionList(String recipeId){
-        ArrayList<String> instructions = new ArrayList<>();
-        Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
-                    JSONArray steps = response.getJSONObject(0).getJSONArray("steps");
-                    for (int i = 0; i < steps.length(); i++) {
-                        try {
-                            JSONObject step = steps.getJSONObject(i);
-                            Log.d("response step", step.toString());
-                            String number = step.getString("number");
-                            String stepString = step.getString("step");
-                            instructions.add("Step " + number + ":\n\t" + stepString);
-                            Log.d("after adding step:", instructions.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        };
-        requestRecipeInstructions(recipeId,listener,errorListener);
-        // todo: how to get it to save instructions?
-        Log.d("all steps", instructions.toString());
-        return instructions;
     }
 }
