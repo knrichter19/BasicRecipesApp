@@ -3,10 +3,8 @@ People can then open up a summary of the recipe, which gives an overview of the 
 
 Todo list:
 - Fix visual issues (text not fitting on items, etc)
-  - Change display of ingredients on recyclerview
   - Stop text cutting off in recyclerview
   - Fix recyclerview falling off screen
-- Error checking for api requests
 
 Possible todo list:
 - Better api key saving/autofilling
