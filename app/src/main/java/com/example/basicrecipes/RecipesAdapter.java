@@ -72,7 +72,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
                         // sends over recipe name + id
                         intent.putExtra("name", recipe.getName());
                         intent.putExtra("id", recipe.getId());
-                        intent.putExtra("ingredients", TextUtils.join("\n",recipe.getIngredients()));
+                        intent.putExtra("ingredients", TextUtils.join("\n",recipe.getFormattedIngredients()));
                         context.startActivity(intent);
                     }
                     Log.d("ButtonClick", "clicked expand button");
@@ -85,7 +85,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
             this.recipe = recipe;
             // sets text for name + ingredients
             nameBox.setText(recipe.getName());
-            ingredientsBox.setText(TextUtils.join(", ", recipe.getIngredients()));
+            ingredientsBox.setText(TextUtils.join(", ", recipe.getIngredientNames()));
         }
     }
 }

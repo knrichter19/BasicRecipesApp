@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recipeView;
     private TextView apiKeyBox;
     private SharedPreferences sharedPreferences;
-    public static int numRecipes = 20;
+    private int numRecipes = 20;
+    private int ranking = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         requests = VolleySingleton.getInstance(this);
 
         queue = Volley.newRequestQueue(this);
-        String url = "https://api.spoonacular.com/recipes/findByIngredients";
 
         // check for stored apiKey
         this.sharedPreferences = getPreferences(MODE_PRIVATE);
@@ -110,12 +110,11 @@ public class MainActivity extends AppCompatActivity {
 
                     Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
 
-                    //Toast.makeText(MainActivity.this, "Error retrieving results", Toast.LENGTH_LONG).show();
                 }
             };
 
             requests.setApiKey(this.apiKey);
-            requests.requestRecipes(joined, 1, numRecipes, listener, errorListener);
+            requests.requestRecipes(joined, ranking, numRecipes, listener, errorListener);
         }
         else{
             Toast.makeText(MainActivity.this, "Please enter an API key to retrieve your recipes!", Toast.LENGTH_LONG).show();
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         // parse response and print out nicely
         for (int i = 0; i < response.length(); i++){
             Recipe newRecipe = new Recipe();
-            ArrayList<String> ingredientArray = new ArrayList<>();
+            ArrayList<String[]> ingredientArray = new ArrayList<>();
             JSONObject recipe = response.getJSONObject(i);
             String title = recipe.getString("title");
             newRecipe.setName(title);
@@ -142,15 +141,17 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject ingredient = usedIngredients.getJSONObject(j);
                 String name = ingredient.getString("name");
                 String amount = ingredient.getString("amount");
+                amount = df.format(Float.valueOf(amount));
                 String unit = ingredient.getString("unit");
-                ingredientArray.add(df.format(Float.valueOf(amount)) + " " + unit + " " + name);
+                ingredientArray.add(new String[]{amount, unit, name});
             }
             for (int j = 0; j < missingIngredients.length(); j++){
                 JSONObject ingredient = missingIngredients.getJSONObject(j);
                 String name = ingredient.getString("name");
                 String amount = ingredient.getString("amount");
+                amount = df.format(Float.valueOf(amount));
                 String unit = ingredient.getString("unit");
-                ingredientArray.add(df.format(Float.valueOf(amount)) + " " + unit + " " + name);
+                ingredientArray.add(new String[]{amount, unit, name});
             }
             newRecipe.setIngredients(ingredientArray);
             recipes.add(newRecipe);

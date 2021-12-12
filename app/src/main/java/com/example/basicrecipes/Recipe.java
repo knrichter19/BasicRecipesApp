@@ -1,11 +1,13 @@
 package com.example.basicrecipes;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 
 public class Recipe {
     public String id;
     public String name;
-    public ArrayList<String> ingredients;
+    public ArrayList<String[]> ingredients;
     public String url;
 
     public Recipe(){
@@ -28,11 +30,29 @@ public class Recipe {
         this.name = name;
     }
 
-    public ArrayList<String> getIngredients() {
+    public ArrayList<String[]> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(ArrayList<String> ingredients) {
+    public ArrayList<String> getFormattedIngredients(){
+        // ingredients are returned formatted as "{amount} {units} {name}"
+        ArrayList<String> formatted = new ArrayList<>();
+        for (String[] ingredient : ingredients){
+            formatted.add(TextUtils.join(" ", ingredient));
+        }
+        return formatted;
+    }
+
+    public ArrayList<String> getIngredientNames(){
+        // only the name of each ingredient is returned, no quantities
+        ArrayList<String> names = new ArrayList<>();
+        for (String[] ingredient : ingredients){
+            names.add(ingredient[2]);
+        }
+        return names;
+    }
+
+    public void setIngredients(ArrayList<String[]> ingredients) {
         this.ingredients = ingredients;
     }
 
