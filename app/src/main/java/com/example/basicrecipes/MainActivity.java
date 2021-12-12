@@ -169,5 +169,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("apiKey", apiKeyBox.getText().toString());
         editor.apply();
+        Toast.makeText(MainActivity.this,"Key Saved", Toast.LENGTH_LONG).show();
     }
 }
