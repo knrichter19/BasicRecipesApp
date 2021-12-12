@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         String url = "https://api.spoonacular.com/recipes/findByIngredients";
 
-        this.apiKey = "7f9718e13529466691df6206e109c755";
-        // todo: get this out of here before making public
+        this.apiKey = "";
     }
 
     public void searchByIngredients(View v){
