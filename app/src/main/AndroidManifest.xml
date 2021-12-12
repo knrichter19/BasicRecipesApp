@@ -12,7 +12,7 @@
         android:theme="@style/Theme.BasicRecipes">
         <activity
             android:name=".RecipeViewActivity"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".IngredientSearchActivity"
             android:exported="false" />

@@ -8,37 +8,51 @@
 
     <EditText
         android:id="@+id/recipeInfo"
-        android:layout_width="354dp"
-        android:layout_height="528dp"
+        android:layout_width="356dp"
+        android:layout_height="473dp"
+        android:layout_marginTop="28dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.589"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipeImage" />
 
     <TextView
         android:id="@+id/recipeHeader"
-        android:layout_width="214dp"
-        android:layout_height="66dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="247dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="16dp"
         android:text="Blank Recipe Name"
-        android:textSize="20dp"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/linkButton"
+        app:layout_constraintHorizontal_bias="0.605"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linkButton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/linkButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="87dp"
+        android:layout_height="57dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="6pt"
         android:onClick="goToOriginal"
-        android:text="View Original Site"
+        android:text="Go to Site"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/recipeImage"
+        android:layout_width="278dp"
+        android:layout_height="178dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipeHeader"
+        app:srcCompat="@drawable/ic_launcher_background"
+        tools:srcCompat="@drawable/ic_launcher_foreground" />
 </androidx.constraintlayout.widget.ConstraintLayout>
