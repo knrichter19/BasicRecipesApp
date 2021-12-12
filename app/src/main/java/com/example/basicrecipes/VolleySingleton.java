@@ -76,26 +76,4 @@ public class VolleySingleton {
         requestQueue.add(request);
     }
 
-    public String getRecipeUrl(String recipeId){
-        final String[] returnUrl = new String[1]; //find better way to do this
-        returnUrl[0] = "";
-        Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    returnUrl[0] = response.getString("sourceUrl");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        };
-        requestRecipeInfo(recipeId,false,listener,errorListener);
-        return returnUrl[0];
-    }
 }

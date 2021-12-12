@@ -9,6 +9,7 @@ Todo list:
 - Error checking for api requests
 
 Possible todo list:
+- Better api key saving/autofilling
 - Toggle prioritizing missing or owned ingredients
 - General refactoring
 - List of ingredients to avoid

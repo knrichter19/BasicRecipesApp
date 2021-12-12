@@ -97,20 +97,18 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    String data;
-                    JSONObject response;
-                    if(error.networkResponse.data!=null) {
-                        try {
-                            data = new String(error.networkResponse.data,"UTF-8");
-                            // todo: finish identifying auth/connection errors
-                            System.out.println(data);
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
+                    String message = "Error retrieving results";
+                    if (statusCode.equals("401")){
+                        // not authorized
+                        message = "You are not authorized. Please enter a valid Spoonacular key";
                     }
-                    //System.out.println(error.networkResponse.statusCode);
-                    //Log.d("errror", error.prin);
-                    Toast.makeText(MainActivity.this, "Error retrieving results - check API key and internet connection", Toast.LENGTH_LONG).show();
+                    else if (statusCode.equals("402")){
+                        // reached quota
+                        message = "You have reached your daily quota for the Spoonacular API";
+                    }
+                    // convert to switch statement + add more checks for other error codes?
+
+                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
 
                     //Toast.makeText(MainActivity.this, "Error retrieving results", Toast.LENGTH_LONG).show();
                 }
