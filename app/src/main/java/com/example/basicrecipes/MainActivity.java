@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private VolleySingleton requests;
     private RecyclerView recipeView;
     private TextView apiKeyBox;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,12 @@ public class MainActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         String url = "https://api.spoonacular.com/recipes/findByIngredients";
 
-        this.apiKey = "";
+        // check for stored apiKey
+        this.sharedPreferences = getPreferences(MODE_PRIVATE);
+        this.apiKey = sharedPreferences.getString("apiKey", null);
+        if (!(apiKey == null)){
+            apiKeyBox.setText(apiKey);
+        }
     }
 
     public void searchByIngredients(View v){
@@ -149,5 +156,13 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.d("full list", recipes.toString());
         return recipes;
+    }
+
+    public void storeKey(View v){
+        // get key from textbox
+        // store
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("apiKey", apiKeyBox.getText().toString());
+        editor.apply();
     }
 }

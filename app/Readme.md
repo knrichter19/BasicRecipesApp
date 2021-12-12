@@ -3,13 +3,14 @@ People can then open up a summary of the recipe, which gives an overview of the 
 
 Todo list:
 - Back button on recipeview
-- Save apikey between opening app
 - Fix visual issues (text not fitting on items, etc)
-- Fix recyclerview initialization - don't remake everything for each search?
+  - Change display of ingredients on recyclerview
+  - Fix decimal rounding
+  - Fix button overlapping recycler
 - Error checking for api requests
 - General refactoring
 
 Possible todo list:
 - List of ingredients to avoid
 - Save recipes option
-- Save apikey between app opening
+- Fix recyclerview initialization - don't remake everything for each search?

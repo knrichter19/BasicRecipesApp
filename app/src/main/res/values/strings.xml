@@ -3,4 +3,5 @@
     <string name="search_button">Search Recipes</string>
     <string name="api_label">API Key: </string>
     <string name="recipe_display_string">Ingredients:\n%1$s\n\nInstructions:\n%2$s</string>
+    <string name="store_key">Save Key</string>
 </resources>

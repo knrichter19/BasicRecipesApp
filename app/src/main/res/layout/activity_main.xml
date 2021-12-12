@@ -32,12 +32,14 @@
 
     <Button
         android:id="@+id/searchButton"
-        android:layout_width="158dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="160dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
         android:onClick="searchByIngredients"
         android:text="@string/search_button"
+        android:textSize="5pt"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ingredientInput" />
 
@@ -45,14 +47,14 @@
         android:id="@+id/ingredientInput"
         android:layout_width="398dp"
         android:layout_height="138dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="4dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <TextView
         android:id="@+id/apiKeyLabel"
@@ -72,6 +74,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchButton"
+        app:layout_constraintVertical_bias="0.989" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="147dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="storeKey"
+        android:text="@string/store_key"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/apiKeyBox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
