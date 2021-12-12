@@ -38,13 +38,14 @@ public class RecipeViewActivity extends AppCompatActivity {
     private String recipeId;
     private VolleySingleton requests;
     private String originalUrl;
-    private String apiKey;
     private String ingredientString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_view);
+
+        // back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -52,20 +53,20 @@ public class RecipeViewActivity extends AppCompatActivity {
         recipeHeader = findViewById(R.id.recipeHeader);
         recipeDisplay = findViewById(R.id.recipeInfo);
 
+        // unpack recipe info
         Intent i = getIntent();
         recipeId = i.getStringExtra("id");
         recipeHeader.setText(i.getStringExtra("name"));
         ingredientString = i.getStringExtra("ingredients");
-        // todo: figure out how to get apiKey
 
+        // apikey is packaged with volley instance
         requests = VolleySingleton.getInstance();
         originalUrl = null;
+
+        // set text for ingredients/instructions
         getInstructionList();
-        getRecipeUrl();
-        // how to wait for results of volley query?
-        //originalUrl = requests.getRecipeUrl(recipeId);
-        // unpack intent
-        // display things well
+        // get image and link to original site and assign to button/iv
+        getRecipeUrls();
     }
 
     private void getInstructionList(){
@@ -79,11 +80,9 @@ public class RecipeViewActivity extends AppCompatActivity {
                     for (int i = 0; i < steps.length(); i++) {
                         try {
                             JSONObject step = steps.getJSONObject(i);
-                            Log.d("response step", step.toString());
                             String number = step.getString("number");
                             String stepString = step.getString("step");
                             instructions.add("Step " + number + ":\n" + stepString.replace(".",".\n"));
-                            Log.d("after adding step:", instructions.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -107,8 +106,9 @@ public class RecipeViewActivity extends AppCompatActivity {
         requests.requestRecipeInstructions(recipeId,listener,errorListener);
     }
 
-    private void getRecipeUrl(){
+    private void getRecipeUrls(){
         // sends API request through volley to get the original recipe url and image url
+        // also sets url link and imageview - maybe untangle later?
         Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

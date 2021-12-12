@@ -25,8 +25,11 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recipeView;
     private TextView apiKeyBox;
     private SharedPreferences sharedPreferences;
+    public static int numRecipes = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             };
 
             requests.setApiKey(this.apiKey);
-            requests.requestRecipes(joined, 1, listener, errorListener);
+            requests.requestRecipes(joined, 1, numRecipes, listener, errorListener);
         }
         else{
             Toast.makeText(MainActivity.this, "Please enter an API key to retrieve your recipes!", Toast.LENGTH_LONG).show();
@@ -122,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Recipe> parseRecipeResults(JSONArray response) throws JSONException {
         ArrayList<Recipe> recipes = new ArrayList<>();
+        DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        df.setMaximumFractionDigits(3);
         // parse response and print out nicely
         for (int i = 0; i < response.length(); i++){
             Recipe newRecipe = new Recipe();
@@ -139,14 +145,14 @@ public class MainActivity extends AppCompatActivity {
                 String name = ingredient.getString("name");
                 String amount = ingredient.getString("amount");
                 String unit = ingredient.getString("unit");
-                ingredientArray.add(amount + " " + unit + " " + name);
+                ingredientArray.add(df.format(Float.valueOf(amount)) + " " + unit + " " + name);
             }
             for (int j = 0; j < missingIngredients.length(); j++){
                 JSONObject ingredient = missingIngredients.getJSONObject(j);
                 String name = ingredient.getString("name");
                 String amount = ingredient.getString("amount");
                 String unit = ingredient.getString("unit");
-                ingredientArray.add(amount + " " + unit + " " + name);
+                ingredientArray.add(df.format(Float.valueOf(amount)) + " " + unit + " " + name);
             }
             newRecipe.setIngredients(ingredientArray);
             recipes.add(newRecipe);

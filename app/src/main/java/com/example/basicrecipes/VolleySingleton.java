@@ -46,14 +46,15 @@ public class VolleySingleton {
         return this.apiKey;
     }
 
-    public void requestRecipes(String ingredients, int ranking,
+    public void requestRecipes(String ingredients, int ranking, int number,
                                     Response.Listener<JSONArray> listener,
                                     Response.ErrorListener errorListener){
         // ingredients: String separated by commas (for now)
 
         String url = "https://api.spoonacular.com/recipes/findByIngredients?apiKey=" + this.apiKey
                 + "&ranking=" + ranking
-                + "&ingredients=" + ingredients;
+                + "&ingredients=" + ingredients
+                + "&number=" + number;
 
         JsonArrayRequest request = new JsonArrayRequest(url,listener, errorListener);
         requestQueue.add(request);

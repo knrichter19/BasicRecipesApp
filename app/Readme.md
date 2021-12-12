@@ -5,12 +5,13 @@ Todo list:
 - Fix visual issues (text not fitting on items, etc)
   - Change display of ingredients on recyclerview
   - Stop text cutting off in recyclerview
-  - Fix decimal rounding
+  - Fix recyclerview falling off screen
 - Error checking for api requests
-- More results in recipe search
 
 Possible todo list:
+- Toggle prioritizing missing or owned ingredients
 - General refactoring
 - List of ingredients to avoid
 - Save recipes option
 - Fix recyclerview initialization - don't remake everything for each search?
+- More results in recipe search - toggleable?
