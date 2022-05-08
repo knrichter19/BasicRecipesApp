@@ -66,59 +66,58 @@ public class MainActivity extends AppCompatActivity {
     public void searchByIngredients(View v){
         this.apiKey = apiKeyBox.getText().toString();
         // todo: check for valid api key
-        if (apiKey.length() > 0) {
-            TextView t = (TextView) findViewById(R.id.ingredientInput);
-            String ingredients = t.getText().toString();
-            String joined = ingredients.replaceAll("\n", ",");
-            Log.d("ingredients", joined);
-            // todo: option to toggle ranking
-
-            // todo: move to new class
-            Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    ArrayList<Recipe> recipes = null;
-                    try {
-                        recipes = parseRecipeResults(response);
-                    } catch (JSONException e) {
-                        Log.d("error", e.getMessage());
-                        Toast.makeText(MainActivity.this, "Error interpreting results", Toast.LENGTH_LONG).show();
-                        // how to interpret api key error vs internet error?
-                    }
-
-                    // todo: error check here + move elsewhere
-                    RecipesAdapter adapter = new RecipesAdapter(recipes);
-                    recipeView.setAdapter(adapter);
-                    recipeView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                }
-            };
-
-            Response.ErrorListener errorListener = new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    String message = "Error retrieving results";
-                    if (statusCode.equals("401")){
-                        // not authorized
-                        message = "You are not authorized. Please enter a valid Spoonacular key";
-                    }
-                    else if (statusCode.equals("402")){
-                        // reached quota
-                        message = "You have reached your daily quota for the Spoonacular API";
-                    }
-                    // convert to switch statement + add more checks for other error codes?
-
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-
-                }
-            };
-
-            requests.setApiKey(this.apiKey);
-            requests.requestRecipes(joined, ranking, numRecipes, listener, errorListener);
-        }
-        else{
+        if (apiKey.length() == 0){
             Toast.makeText(MainActivity.this, "Please enter an API key to retrieve your recipes!", Toast.LENGTH_LONG).show();
+            return;
         }
+        TextView t = (TextView) findViewById(R.id.ingredientInput);
+        String ingredients = t.getText().toString();
+        String joined = ingredients.replaceAll("\n", ",");
+        Log.d("ingredients", joined);
+        // todo: option to toggle ranking
+
+        // todo: move to new class
+        Response.Listener<JSONArray> listener = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                ArrayList<Recipe> recipes = null;
+                try {
+                    recipes = parseRecipeResults(response);
+                } catch (JSONException e) {
+                    Log.d("error", e.getMessage());
+                    Toast.makeText(MainActivity.this, "Error interpreting results", Toast.LENGTH_LONG).show();
+                    // how to interpret api key error vs internet error?
+                }
+
+                // todo: error check here + move elsewhere
+                RecipesAdapter adapter = new RecipesAdapter(recipes);
+                recipeView.setAdapter(adapter);
+                recipeView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+            }
+        };
+
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String statusCode = String.valueOf(error.networkResponse.statusCode);
+                String message = "Error retrieving results";
+                if (statusCode.equals("401")){
+                    // not authorized
+                    message = "You are not authorized. Please enter a valid Spoonacular key";
+                }
+                else if (statusCode.equals("402")){
+                    // reached quota
+                    message = "You have reached your daily quota for the Spoonacular API";
+                }
+                // convert to switch statement + add more checks for other error codes?
+
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+
+            }
+        };
+
+        requests.setApiKey(this.apiKey);
+        requests.requestRecipes(joined, ranking, numRecipes, listener, errorListener);
     }
 
     private ArrayList<Recipe> parseRecipeResults(JSONArray response) throws JSONException {
